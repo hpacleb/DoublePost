@@ -3,9 +3,9 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const TOKEN = process.env.TOKEN;
-const url = process.env.MONGOURL;
-
+const TOKEN = 'NzY0MDY1MTkzMDg4Mzg1MDQ0.X4A1KQ.4eflhej_6GZtcNfhBSQ8KJthmu8';
+const url = 'mongodb+srv://new:incredible123@cluster0.ifvpj.mongodb.net/mydb?retryWrites=true&w=majority';
+const channelid = process.env.CHANNELID;
 /*
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
@@ -44,6 +44,7 @@ bot.on('ready', () => {
 
 bot.on('message', msg => {
 	if(msg.author.bot) return;
+	if(!(msg.channel.id == channelid)) return;
 	/* for checking deleted message
   	bot.channels.fetch('764091640305680385')
 		.then(channel => {
