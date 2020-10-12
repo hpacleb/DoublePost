@@ -75,7 +75,7 @@ bot.on('message', msg => {
 		console.log(result);
 		db.close();
 		msg.delete();
-		msg.author.send("You already have an existing post at https://discord.com/channels/694649038611546132/" + result[0].MsgID + ". Please edit it instead. ")
+		msg.author.send("You already have an existing post at https://discord.com/channels/592741221856706590/" + channelid + "/" result[0].MsgID + ". Please edit it instead. ")
 	}
 	else{
 	  //Insert 
