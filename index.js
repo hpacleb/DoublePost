@@ -3,8 +3,8 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const TOKEN = 'NzY0MDY1MTkzMDg4Mzg1MDQ0.X4A1KQ.4eflhej_6GZtcNfhBSQ8KJthmu8';
-const url = 'mongodb+srv://new:incredible123@cluster0.ifvpj.mongodb.net/mydb?retryWrites=true&w=majority';
+const TOKEN = process.env.BOT_TOKEN
+const url = process.env.MONGO_URL
 const channelid = process.env.CHANNELID;
 /*
 MongoClient.connect(url, function(err, db) {
