@@ -46,9 +46,9 @@ bot.on('message', msg => {
 	if(msg.author.bot) return;
 	if(!(msg.channel.id == channelid)) return;
 	/* for checking deleted message
-  	bot.channels.fetch('764091640305680385')
+	bot.channels.fetch(channelid)
 		.then(channel => {
-			channel.messages.fetch('764092286660902943')
+			channel.messages.fetch(msgid)
 				.then(message => console.log(message.content))
 				.catch(err => {
 					console.log("message got deleted");
@@ -71,18 +71,47 @@ bot.on('message', msg => {
   dbo.collection("Record").find(query).toArray(function(err, result) {
     if (err) throw err;
     if (result.length){
-		//Found double post delete original message and dm user
-		console.log(result);
-		db.close();
-		msg.delete();
-		msg.author.send("You already have an existing post at <https://discord.com/channels/592741221856706590/" + channelid + "/" + result[0].MsgID + "> . Please edit it instead. ")
+		// check if message is deleted
+		bot.channels.fetch(channelid)
+			.then(channel => {
+			channel.messages.fetch(result[0].MsgID)
+				.then(message => {
+					//Found double post delete original message and dm user
+					console.log(result);
+					db.close();
+					msg.delete();
+					msg.author.send("You already have an existing post at <https://discord.com/channels/"+ msg.guild.id + "/" + channelid + "/" + result[0].MsgID + "> . Please edit it instead. ")					
+					console.log(message.content)
+				
+				})
+				.catch(err => {
+					if(err.message == 'Unknown Message') {
+						//update database with new msg id
+						  var mobj = {};
+						  mobj.MsgID = msg.id;
+						  var newvalues = { $set: mobj };
+						  dbo.collection("Record").updateOne(query, newvalues, function(err, res) {
+							if (err) throw err;
+							console.log("1 document updated");
+							db.close();
+						  });
+					}
+					else{
+						db.close();
+						console.log(err);
+					}
+				});
+
+			})
+			.catch(console.error);
+
 	}
 	else{
 	  //Insert 
 	dbo.collection("Record").insertOne(myobj, function(err, res) {
-    if (err) throw err;
-    console.log("1 document inserted");
-	db.close();
+		if (err) throw err;
+		console.log("1 document inserted");
+		db.close();
 	});
 	}
   });
